@@ -1,0 +1,61 @@
+# version: 2
+# jobs:
+#   build:
+#     docker:
+#       # specify the version you desire here
+#       - image: circleci/python:3.6.9
+
+#     working_directory: ~/repo
+
+#     steps:
+#       - checkout
+
+#       # Download and cache dependencies
+#       - restore_cache:
+#           keys:
+#             - vl-dependencies-{{ checksum "requirements.txt" }}
+#             # fallback to using the latest cache if no exact match is found
+#             - vl-dependencies-
+
+#       - run:
+#           name: install dependencies
+#           command: |
+#             python3 -m virtualenv venv
+#             . venv/bin/activate
+#             pip install -r requirements.txt
+
+#       - save_cache:
+#           paths:
+#             - ./venv
+#           key: vl-dependencies-{{ checksum "requirements.txt" }}
+
+#       - run:
+#           name: run tests
+#           command: |
+#             . venv/bin/activate
+#             python manage.py test
+
+#       - store_artifacts:
+#           path: test-reports
+#           destination: test-reports
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
+jobs:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run:
+          command: ./manage.py test
+          name: Test
+
+workflows:
+  main:
+    jobs:
+      - build-and-test

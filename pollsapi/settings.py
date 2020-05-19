@@ -25,7 +25,7 @@ SECRET_KEY = '=e!05xe_y8p7m3@$--t#%&7xn2f3u=jxo*@@2@qhp+z3rd!kf)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     "rest_framework",
     "rest_framework.authtoken",
+    'rest_framework_swagger',
     "polls",
 ]
 

@@ -12,29 +12,16 @@ from .models import Poll, Choice
 from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserSerializer
 
 
-"""
-viewsets.ModelViewSet - when you are going to allow all or most of CRUD
-operations on a model
-
-generics.* - when you only want to allow some operations on a model
-
-APIView when you want to completely customize the behaviour
-"""
-
-"""
-ListCreateAPIView - get a list of entities or create them. 
-Allow GET and POST
-"""
 class PollList(generics.ListCreateAPIView):
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
 
 
-"""
-RetriveDestroyAPIView - retrive an individual entity details or delete the entity
-Allows GET and DELETE
-"""
 class PollDetail(generics.RetrieveDestroyAPIView):
+    """
+    RetriveDestroyAPIView - retrive an individual entity details or delete the entity
+    Allows GET and DELETE
+    """
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
 
@@ -53,13 +40,11 @@ class ChoiceList(generics.ListCreateAPIView):
         return super().post(request, *args, **kwargs)
 
 
-"""
-CreateAPIView - Allows creating entities, but not listing them
-Allows POST
-"""
-# class CreateVote(generics.CreateAPIView):
-#     serializer_class = VoteSerializer
 class CreateVote(APIView):
+    """
+    CreateAPIView - Allows creating entities, but not listing them
+    Allows POST
+    """
     serializer_class = VoteSerializer
 
     def post(self, request, pk, choice_pk):
@@ -73,10 +58,8 @@ class CreateVote(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-"""
-Viewsets
-"""
 class PollViewSet(viewsets.ModelViewSet):
+    """Viewsets"""
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
 
@@ -87,11 +70,10 @@ class PollViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
-"""
-User
-authentication_classes & permission_classes = () -> to exempt UserCreate from global authentication scheme
-"""
 class UserCreate(generics.CreateAPIView):
+    # User authentication_classes & permission_classes = () ->
+    # to exempt UserCreate from global authentication scheme
+
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserSerializer

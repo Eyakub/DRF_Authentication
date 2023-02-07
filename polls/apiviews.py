@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
-
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 
@@ -13,6 +13,7 @@ from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserS
 
 
 class PollList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
 
@@ -27,6 +28,7 @@ class PollDetail(generics.RetrieveDestroyAPIView):
 
 
 class ChoiceList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     def get_queryset(self):
         queryset = Choice.objects.filter(poll_id=self.kwargs['pk'])
         return queryset
@@ -46,7 +48,7 @@ class CreateVote(APIView):
     Allows POST
     """
     serializer_class = VoteSerializer
-
+    permission_classes = (IsAuthenticated,)
     def post(self, request, pk, choice_pk):
         voted_by = request.data.get('voted_by')
         data = {'choice': choice_pk, 'poll': pk, 'voted_by': voted_by}
@@ -62,6 +64,7 @@ class PollViewSet(viewsets.ModelViewSet):
     """Viewsets"""
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         poll = Poll.objects.get(pk=self.kwargs['ok'])
